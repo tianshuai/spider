@@ -1,0 +1,12 @@
+<html>
+<head></head>
+<body>
+<h1>aaaaaaaaaaaaa</h1>
+
+<%@arr.each do |b|%>
+		<%=b%>
+
+<%end%>
+
+</body>
+</html>

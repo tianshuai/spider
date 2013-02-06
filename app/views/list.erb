@@ -1,0 +1,20 @@
+<h1>这是列表页</h1>
+<table class="table_style">
+	<tr>
+		<td>ID</td>
+		<td>名称</td>
+		<td>网址</td>
+		<td>操作</td>
+	</tr>
+	<% if @web_infos.present?%>
+		<% @web_infos.each do |d| %>
+			<tr>
+				<td><%=d.id%></td>
+				<td><%=d.title%></td>
+				<td><%=d.url%></td>
+				<td><a href="/edit/<%=d.id%>">编辑</a> ｜ <a href="/destroy/<%=d.id%>">删除</a></td>
+			</tr>
+		<%end%>
+	<%end%>
+
+</table>

@@ -1,0 +1,21 @@
+---
+development:
+  sessions:
+    default:
+        database: spidr
+        hosts:
+            - localhost:27017
+production:
+  sessions:
+    default:
+      uri: ''
+options:
+  allow_dynamic_fields: false
+  identity_map_enabled: true
+  include_root_in_json: true
+  include_type_for_serialization: true
+  scope_overwrite_exception: true
+  raise_not_found_error: false
+  skip_version_check: false
+  use_activesupport_time_zone: false
+  use_utc: true
