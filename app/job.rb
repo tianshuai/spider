@@ -36,6 +36,26 @@
 		erb :edit
 	end
 
+	#资料库
+	get '/web_list/:tab' do
+require 'kaminari/sinatra'
+require 'kaminari'
+		@title = '资料库列表'
+		@webs = WebRecord.have_tab(params[:tab]).page(params[:page]).per(5)
+		erb :web_list
+	end
+
+	post '/update/:id' do
+		@web_info = WebInfo.find(params[:id])
+		if @web_info.update_attributes(params[:web_info])
+			flash[:error] = '更新成功'
+			redirect '/list'
+		else
+			#flash.new[:error] = '更新失败'
+		end
+		erb :edit
+	end
+
 	get '/destroy/:id' do
 		@web_info = WebInfo.find(params[:id])
 		if @web_info.present?

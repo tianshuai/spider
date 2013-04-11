@@ -2,7 +2,9 @@
 <table class="table_style">
 	<tr>
 		<td>ID</td>
+		<td>标识</td>
 		<td>名称</td>
+		<td>关键词</td>
 		<td>网址</td>
 		<td>操作</td>
 	</tr>
@@ -10,9 +12,11 @@
 		<% @web_infos.each do |d| %>
 			<tr>
 				<td><%=d.id%></td>
+				<td><%=d.tab%></td>
 				<td><%=d.title%></td>
+				<td><%=d.keyword%></td>
 				<td><%=d.url%></td>
-				<td><a href="/edit/<%=d.id%>">编辑</a> ｜ <a href="/destroy/<%=d.id%>">删除</a></td>
+				<td><a href="/web_list/<%=d.tab%>">资料库</a> | <a href="/edit/<%=d.id%>">编辑</a> ｜ <a href="/destroy/<%=d.id%>">删除</a></td>
 			</tr>
 		<%end%>
 	<%end%>
