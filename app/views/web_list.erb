@@ -1,0 +1,29 @@
+<h1>这是资料库列表页</h1>
+<table class="table_style">
+	<tr>
+		<td>标识</td>
+		<td>名称</td>
+		<td>关键词</td>
+		<td>网址</td>
+		<td>操作</td>
+	</tr>
+	<% if @webs.present?%>
+		<% @webs.each do |d| %>
+			<tr>
+				<td><%=d.tab%></td>
+				<td><%=d.title%></td>
+				<td>
+					<% if d.imgs.present? %>
+						<img src="<%=d.imgs%>" width="100" height="60" />
+					<%else%>
+						无图片
+					<%end%>
+				</td>
+				<td><%=d.url%></td>
+				<td><a href="/web_list/<%=d.tab%>">资料库</a> | <a href="/edit/<%=d.id%>">编辑</a> ｜ <a href="/destroy/<%=d.id%>">删除</a></td>
+			</tr>
+		<%end%>
+	<%end%>
+
+</table>
+<%#=paginate @webs if @webs.present? %>
