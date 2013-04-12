@@ -1,9 +1,13 @@
 <h1>这是资料库列表页</h1>
+
+<% if @webs.present? %>
+	<span>总量：</span> <span><%=@webs.count%> </span> <span>每页50条，手动分页</span>
+<%end%>
 <table class="table_style">
 	<tr>
 		<td>标识</td>
 		<td>名称</td>
-		<td>关键词</td>
+		<td>图片</td>
 		<td>网址</td>
 		<td>操作</td>
 	</tr>

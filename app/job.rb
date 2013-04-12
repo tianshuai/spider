@@ -1,5 +1,11 @@
 # encoding: utf-8
 
+	helpers do
+	  def page_title(name)
+		"#{name}bar"
+	  end
+	end
+
 	get '/' do
 		settings.root
 		@title = '首页'
@@ -38,10 +44,10 @@
 
 	#资料库
 	get '/web_list/:tab' do
-require 'kaminari/sinatra'
-require 'kaminari'
+		require 'kaminari/sinatra'
+		require 'kaminari'
 		@title = '资料库列表'
-		@webs = WebRecord.have_tab(params[:tab]).page(params[:page]).per(5)
+		@webs = WebRecord.have_tab(params[:tab]).page(params[:page]).per(50)
 		erb :web_list
 	end
 

@@ -9,5 +9,11 @@
 	<input type="text" name="web_info[tags]" value="<%=@web_info.tags%>" /><br />
 	<label>关键词：</label>
 	<input type="text" name="web_info[keyword]" value="<%=@web_info.keyword%>" /><br />
+	<label>标题选择器：</label>
+	<input type="text" name="web_info[config][title]" value="<%=@web_info.config['title']%>" /><br />
+	<label>描述选择器：</label>
+	<input type="text" name="web_info[config][desc]" value="<%=@web_info.config['desc']%>" /><br />
+	<label>图片选择器：</label>
+	<input type="text" name="web_info[config][img]" value="<%=@web_info.config['img']%>" /><br />
 	<input type="submit" value="submit" />
 </form>

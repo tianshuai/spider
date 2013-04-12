@@ -39,7 +39,7 @@ class WebInfo
 	field :config,		type: Hash,		default: {}
 
 	#验证
-	validates_presence_of :title ,:url
+	validates_presence_of :title ,:url,:tab
 end
 
 class WebRecord

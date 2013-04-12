@@ -11,3 +11,7 @@ spider 抓取网站图片
 3.点击‘新建’，创建要抓取网站的信息,添好各项内容，其中的‘标识’是你在后台执行任务时必需要传的参数
 
 
+4.抓取网页执行的任务：rake tian:spider_img[tab,type]
+5.分析链接执行的任务：rake tian:analyse_page[tab,type]
+
+

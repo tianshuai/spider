@@ -28,26 +28,32 @@ namespace :tian do
 			if s.present?
 				puts 'have spidr'
 				s.every_url do |url|
-					if WebRecord.is_have?(url.to_s)
+					#判断这个页面是否存在数据库，如果存在则跳过，不存在则创建
+					if url.to_s[-1]=='/'
+						url = url.to_s[0,url.to_s.size-1]
+					else
+						url = url.to_s
+					end
+					if WebRecord.is_have?(url)
 						puts "have_url: #{m}"
 						m+=1
 					else
 
 						if web.keyword.present?
 							if url.to_s.include?(web.keyword)
-								WebRecord.create(:tab=>args[:tag],:url=>url.to_s)
+								WebRecord.create(:tab=>args[:tag],:url=>url)
 								puts "no_have_url: #{n}"
 								n+=1
 								i+=1
-								s.pause! if i>100
+								s.pause! if i>5000
 							end
 						else
-							WebRecord.create(:tab=>args[:tag],:url=>url.to_s)
+							WebRecord.create(:tab=>args[:tag],:url=>url)
 							puts "new_page: #{n}"
 							n+=1
 							puts i
 							i+=1
-							s.pause! if i>100
+							s.pause! if i>5000
 						end
 					end
 				end
@@ -62,20 +68,24 @@ namespace :tian do
 
   #分析页面 （需传入参数：tag=>网站标识，type=>还未定义）
   desc "fetch_info"
-  task :analyse_page, [:tag,:type] do |t,args|
+  task :fetch_info, [:tag,:type] do |t,args|
 	require 'nokogiri'	
 	require 'faraday'
 	#require 'open-uri'
 	args.with_defaults(:tag => 'def', :type => 1)
 	puts '======start======='
 
-	items = WebRecord.where(:tab=>args[:tag],:state=>WebRecord::STATE[:no])
-	if items.present?
-		i=0
-		items.each do |item|
-			web = WebInfo.where(:tab=>args[:tag])
-			if web.present? and item.present? and item.url.present?
-				web = web.first
+	web = WebInfo.where(:tab=>args[:tag])
+	if web.present?
+		web = web.first
+		title_f = web.config['title']
+		desc_f = web.config['desc']
+		img_f = web.config['img']
+
+		items = WebRecord.where(:tab=>args[:tag],:state=>WebRecord::STATE[:no])
+		if items.present?
+			i=0
+			items.each do |item|
 				response = Faraday.get(item.url)
 
 				case response.status
@@ -89,19 +99,19 @@ namespace :tian do
 
 				doc = Nokogiri::HTML(html)
 				if doc.present?
-					title = doc.css('title')
+					title = doc.css(title_f)
 					if title.present?
 						title = title.first.content
 					else
 						title = ''
 					end
-					img = doc.css('.SingleBigImage img')
+					img = doc.css(img_f)
 					if img.present?
 						img = img.first.attr('src') 
 					else
 						img = ''
 					end
-					desc = doc.css('.SingleArticleMainDescription')
+					desc = doc.css(desc_f)
 					if desc.present?
 						desc = desc.first.content 
 					else
@@ -121,14 +131,63 @@ namespace :tian do
 				puts "img: #{options[:imgs]}" 
 
 				item.update_attributes(options)
-				
-			end
-		end
-	else
-
-	end
+					
+			end#loop_end
+		end#if items_end
+	end#if web.present?
 	puts "============end================="
   end
+
+
+  ##下载图片保存到本地
+  desc "down_img"
+  task :down_img, [:tag,:type] do |t,args|
+	args.with_defaults(:tag => 'def', :type => 1)
+	require 'open-uri'
+	require 'mini_magick'
+	puts '======start======='
+	items = WebRecord.where(:tab=>args[:tag],:state=>WebRecord::STATE[:no])
+
+	items.each_with_index do |item,index|
+		if item.present? and item.imgs.present?
+			#response = Faraday.get(item.imgs)
+			ext = item.imgs.split('.').last
+			file_name = "#{Time.now.to_i.to_s}#{rand(10000)}.#{ext}"
+			path = "/extend/images/sheji_new/#{file_name}"
+			#File.new(path,'w')
+			
+
+			image_io= open(item.imgs)
+
+			image_mini = MiniMagick::Image.read(image_io)
+			#	image_mini.combine_options do |img|
+			#		img.quality '100'
+			#	end
+			image_mini.write(path)
+			#return false if index>2
+
+		end
+	end
+
+  end
+
+
+  ##下载图片保存到本地
+  desc "update_data"
+  task :update_data, [:tag,:type] do |t,args|
+
+	puts '======start======='
+	items = WebRecord.where(:tab=>args[:tag],:state=>WebRecord::STATE[:no])
+
+	items.each_with_index do |item,index|
+		if item.present?
+			item.destroy	
+
+		end
+	end
+
+  end
+
 
 end
 
