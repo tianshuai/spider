@@ -45,7 +45,7 @@ namespace :tian do
 								puts "no_have_url: #{n}"
 								n+=1
 								i+=1
-								s.pause! if i>5000
+								s.pause! if i>100
 							end
 						else
 							WebRecord.create(:tab=>args[:tag],:url=>url)
@@ -53,7 +53,7 @@ namespace :tian do
 							n+=1
 							puts i
 							i+=1
-							s.pause! if i>5000
+							s.pause! if i>100
 						end
 					end
 				end
@@ -171,8 +171,27 @@ namespace :tian do
 
   end
 
+  ##测试
+  desc 'test'
+  task :test do
+	require 'nokogiri'	
+	require 'faraday'
+	puts 'begin'
+	#path = settings.root
+	path = '/extend/bathroom.htm'
+	html = open(path)
+	doc = Nokogiri::HTML(html)
+	puts doc.at_css('title').text
+        m = /dsz\.contents\.push[^;]+/
 
-  ##下载图片保存到本地
+	puts doc.at_css('html').content.scan(m).first
+	#puts doc.css('script')[34].content
+
+
+  end
+
+
+  ##更新数据
   desc "update_data"
   task :update_data, [:tag,:type] do |t,args|
 
