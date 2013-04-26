@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 require 'mongoid'
 require 'kaminari/sinatra'
+require 'digest/md5'
 Mongoid.load!(settings.config_dir + "/mongoid.yml")
 
 class WebInfo
@@ -71,17 +72,28 @@ class WebRecord
 		ok: 1	
 	}
 
-	#字段
+	##字段
+	#标识 
 	field :tab,			type: String
+	#标题
 	field :title,	 	type: String
+	#描述
 	field :desc,		type: String
+	#图片地址，多张图片用,分开
 	field :imgs,		type: String
+	#源地址
 	field :url, 	 	type: String
-	field :keyword,		type: String
+	#标签（多个标签用,分开）
+	field :tags,		type: String
+	#状态0，未处理的页面；1.处理完的页面
 	field :state, 		type: Integer,	default: STATE[:no]
+	#类型（备用）
 	field :type,		type: Integer,	default: 1
+	#索引（对url md5加密,用于索引）
+	field :index,		type: String
 
 
+	##过滤
 	#处理完的页面
 	scope :compact,		where(state: STATE[:ok])
 	#标识
@@ -92,13 +104,14 @@ class WebRecord
 
 	##索引
 	index({ tab: 1 }, { unique: true, background: true })
-	index({ url: 1 }, { background: true })
+	index({ index: 1 }, { background: true })
 
 	##方法
 	
 	#网址是否存在
 	def self.is_have?(url)
-		return true if self.where(:url=>url).present?
+		index = Digest::MD5.hexdigest(url)
+		return true if self.where(:index=>index).present?
 		return false
 	end
 

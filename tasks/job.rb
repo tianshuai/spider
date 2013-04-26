@@ -18,6 +18,7 @@ namespace :tian do
   desc 'spider_img'
   task :spider_img, [:tag,:type] do |t,args|
 	require 'spidr'
+	require 'digest/md5'
 	args.with_defaults(:tag => 'def', :type => 1)
 	puts '======start======='
 	web = WebInfo.where(:tab=>args[:tag])
@@ -40,15 +41,17 @@ namespace :tian do
 					else
 
 						if web.keyword.present?
-							if url.to_s.include?(web.keyword)
-								WebRecord.create(:tab=>args[:tag],:url=>url)
+							if url.include?(web.keyword)
+								index = Digest::MD5.hexdigest(url)
+								WebRecord.create(:tab=>args[:tag],:url=>url,:index=>index)
 								puts "no_have_url: #{n}"
 								n+=1
 								i+=1
 								s.pause! if i>100
 							end
 						else
-							WebRecord.create(:tab=>args[:tag],:url=>url)
+							index = Digest::MD5.hexdigest(url)
+							WebRecord.create(:tab=>args[:tag],:url=>url,:index=>index)
 							puts "new_page: #{n}"
 							n+=1
 							puts i
@@ -105,12 +108,11 @@ namespace :tian do
 					else
 						title = ''
 					end
-					img = doc.css(img_f)
-					if img.present?
-						img = img.first.attr('src') 
-					else
-						img = ''
+					imgs = []
+					doc.css(img_f).each do |img|
+						imgs << img if img.present?
 					end
+
 					desc = doc.css(desc_f)
 					if desc.present?
 						desc = desc.first.content 
@@ -123,7 +125,7 @@ namespace :tian do
 				end
 				options = {
 					:title=>title,
-					:imgs=>img,
+					:imgs=>imgs,
 					:desc=>desc
 				}
 				puts "url: #{item.url}"
@@ -181,10 +183,23 @@ namespace :tian do
 	path = '/extend/bathroom.htm'
 	html = open(path)
 	doc = Nokogiri::HTML(html)
-	puts doc.at_css('title').text
-        m = /dsz\.contents\.push[^;]+/
+	doc.css('html').each do |item|
+        m = /dsz\.contents\.push[^;]*/
+		arr =  item.content.scan(m)
+		if arr .present?
+			arr.each do |a|
+				url = a.split(',')
+				if url.is_a?(Array) and url.size>3
+					puts url[2]
+				end
+			end
+		end
 
-	puts doc.at_css('html').content.scan(m).first
+	end
+		
+
+
+	#puts doc.at_css('html').content.scan(m)
 	#puts doc.css('script')[34].content
 
 
