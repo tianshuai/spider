@@ -13,19 +13,19 @@ spider 抓取网站图片
 	field :tab,			type: String
 	######标题
 	field :title,	 	type: String
-	#网站地址
+	######网站地址
 	field :url, 	 	type: String
-	#field :user, 		type: Integer
-	#关键字（如果填写，抓取时只会取含有该关键字的Url）
+	######field :user, 		type: Integer
+	######关键字（如果填写，抓取时只会取含有该关键字的Url）
 	field :keyword,		type: String
-	#标签（备用）
+	######标签（备用）
 	field :tags, 		type: Array
-	#状态
+	######状态
 	field :state, 		type: Integer,	default: STATE[:no]
-	#分类
+	######分类
 	field :type,		type: Integer,	default: TYPE[:spidr]
-	#配置信息(分析页面时会根据下列选择器抓取该网页下的标题、图片地址、描述等内容)
-	#：options{:title='标题',desc=>'描述信息',img=>'图片路径'}
+	######配置信息(分析页面时会根据下列选择器抓取该网页下的标题、图片地址、描述等内容)
+	######：options{:title='标题',desc=>'描述信息',img=>'图片路径'}
 	field :config,		type: Hash,		default: {}
 
 
