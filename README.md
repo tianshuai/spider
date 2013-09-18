@@ -8,10 +8,10 @@ spider 抓取网站图片
 1. 在该目录下打开 终端，首次执行需要安装gem，bundle install,启动命令：rackup ,默认端口号为9292
 2. 打开浏览器访问首页：127.0.0.1:9292 
 3. 点击‘新建’，创建要抓取网站的信息,添好各项内容
-	##字段
-	#标识（执行rake任务时会传入此参数）
+	######字段
+	######标识（执行rake任务时会传入此参数）
 	field :tab,			type: String
-	#标题
+	######标题
 	field :title,	 	type: String
 	#网站地址
 	field :url, 	 	type: String
